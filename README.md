@@ -1,3 +1,13 @@
+## Instructions on how to run
+* cd backend/
+* yarn
+* yarn start 
+
+npm
+* cd backend/
+* npm install
+* npm start
+
 # Take-home exercise for backend interviews at Eaze
 
 Build the API to allow for the anonymous creation/taking of surveys (i.e. you don't have to create a user account to create a survey).
