@@ -5,7 +5,19 @@ const knexConfig = require('../knexfile.js');
 const db = knex(knexConfig.development);
 
 router.get('/', (req, res) => {
-    res.status(201).json({'message':'survey creation routes working'});
+    db('surveys_table')
+        .select()
+        .then(surveys => {
+            let cleanedArray = [];
+            surveys.forEach(survey => {
+                const item = {"id":survey.id, "title":survey.title};
+                cleanedArray.push(item);
+            });
+            res.status(200).json(cleanedArray);
+        })
+        .catch(err => {
+            res.status(500).json(err.message);
+        });
 });
 
 router.post('/', (req, res) => {
@@ -14,6 +26,20 @@ router.post('/', (req, res) => {
         .insert(survey)
         .then(id => {
             res.status(200).json({"success":'created new survey with id', "id":id[0]});
+        })
+        .catch(err => res.status(500).json(err.message));
+});
+
+router.get('/:id', (req, res) => {
+    const {id} = req.params;
+    db('surveys_table')
+        .where('id', '=', id)
+        .then(object => {
+            if(object.length !== 0){
+                res.status(200).json(object[0]);
+            }else{
+                res.status(400).json({"error":`no survey with id ${id} exists`});
+            }
         })
         .catch(err => res.status(500).json(err.message));
 });
