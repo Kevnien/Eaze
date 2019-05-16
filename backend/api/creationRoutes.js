@@ -44,6 +44,38 @@ router.get('/:id', (req, res) => {
         .catch(err => res.status(500).json(err.message));
 });
 
+router.put('/:id', (req, res) => {
+    const {id} = req.params;
+    const newTitle = req.body;
+    let oldTitle = "";
+    db('surveys_table')
+        .where('id', '=', id)
+        .then(survey => {
+            if(survey.length !== 0){
+                oldTitle = survey[0].title;
+            }else{
+                res.status(400).json({"error":`survey of id ${id} not found`});
+            }
+        })
+        .catch(err => res.status(500).json(err.message));
+    db('surveys_table')
+        .where('id', '=', id)
+        .update(newTitle)
+        .then(bool => {
+            if(bool === 1){
+                res.status(200).json({
+                    "success":"successfully updated",
+                    "id":id,
+                    "new_title":newTitle,
+                    "old_title":oldTitle
+                });
+            }else{
+                res.status(400).json(`error":"unable to update survey of id ${id}`);
+            }
+        })
+        .catch(err => res.status(500).json({"error":err.message}));
+});
+
 router.post('/:id', (req, res) => {
     const {id} = req.params;
     const question = req.body;
