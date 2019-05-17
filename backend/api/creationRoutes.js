@@ -48,6 +48,11 @@ router.put('/:id', (req, res) => {
     const {id} = req.params;
     const newTitle = req.body;
     let oldTitle = "";
+    var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date+' '+time;
+    newTitle.updated_at = dateTime;
     db('surveys_table')
         .where('id', '=', id)
         .then(survey => {
@@ -74,6 +79,21 @@ router.put('/:id', (req, res) => {
             }
         })
         .catch(err => res.status(500).json({"error":err.message}));
+});
+
+router.delete('/:id', (req, res) => {
+    const {id} = req.params;
+    db('surveys_table')
+        .where('id', '=', id)
+        .del()
+        .then(bool => {
+            if(bool === 1){
+                res.status(200).json({"success":"survey deleted","bool":bool});
+            }else{
+                res.status(400).json({"user error":`could not find survey of id ${id}`});
+            }
+        })
+        .catch(err => {res.status(500).json({"server error":err.message})});
 });
 
 router.post('/:id', (req, res) => {
