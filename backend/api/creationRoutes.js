@@ -88,12 +88,32 @@ router.delete('/:id', (req, res) => {
         .del()
         .then(bool => {
             if(bool === 1){
-                res.status(200).json({"success":"survey deleted","bool":bool});
+                db('questions_table')
+                    .where('survey_id','=',id)
+                    .del()
+                    .then(count => {
+                        res.status(200).json({"success":`deleted ${count} questions that referenced survey ${id}`})
+                    })
+                    .catch(err => res.status(500).json({
+                        "server error":err.message,
+                        "survey id":id
+                    }));
             }else{
                 res.status(400).json({"user error":`could not find survey of id ${id}`});
             }
         })
         .catch(err => {res.status(500).json({"server error":err.message})});
+});
+
+router.delete('/delete_questions/:id', (req, res) => {
+    const {id} = req.params;
+    db('questions_table')
+        .where('survey_id','=',id)
+        .del()
+        .then(something => {
+            res.status(200).json(something);
+        })
+        .catch(err => res.status(500).json({"server error":err.message}));
 });
 
 router.post('/:id', (req, res) => {
