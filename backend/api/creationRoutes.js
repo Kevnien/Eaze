@@ -105,17 +105,23 @@ router.delete('/:id', (req, res) => {
         .catch(err => {res.status(500).json({"server error":err.message})});
 });
 
+// clears a survey of all its questions
 router.delete('/delete_questions/:id', (req, res) => {
     const {id} = req.params;
     db('questions_table')
         .where('survey_id','=',id)
         .del()
-        .then(something => {
-            res.status(200).json(something);
+        .then(count => {
+            res.status(200).json({
+                "success":"cleared survey of questions",
+                "amount_deleted":count,
+                "survey_id":id
+            });
         })
         .catch(err => res.status(500).json({"server error":err.message}));
 });
 
+// creates a new question for a survey
 router.post('/:id', (req, res) => {
     const {id} = req.params;
     const question = req.body;
@@ -136,6 +142,6 @@ router.post('/:id', (req, res) => {
             }
         })
         .catch(err => res.status(500).json(err.message));
-})
+});
 
 module.exports = router;

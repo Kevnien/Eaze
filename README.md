@@ -8,6 +8,17 @@ npm
 * npm install
 * npm start
 
+## Endpoints
+All bodies should be in JSON
+
+# /api/
+* all endpoints begin with /api/
+* GET / - gets all the surveys in the db without the timestamp
+# /create/
+* GET / - responds with status 200 and json object to confirm create endpoint is working
+* POST / - body:{"title":"title of survey"} ; inserts a new survey into the db ; returns success message with id of survey
+* POST /:id = id:id of survey to add question to ; body:{"question":"survey question"} ; inserts question for a survey into the db ; returns success message with id of question
+
 # Take-home exercise for backend interviews at Eaze
 
 Build the API to allow for the anonymous creation/taking of surveys (i.e. you don't have to create a user account to create a survey).
