@@ -152,10 +152,14 @@ router.post('/:id', (req, res) => {
 // READS a question
 router.get('/question/:id', (req, res) => {
     const {id} = req.params;
-    db('surveys_table')
+    db('questions_table')
         .where({id: id})
-        .then(something => {
-            res.status(200).json({"success":something});
+        .then(question => {
+            if(question.length !== 0){
+                res.status(200).json({"success":question[0]});
+            }else{
+                res.status(400).json({"user_error":"no question with that id found","id":id});
+            }
         })
         .catch(err => res.status(500).json({"error":err.message}));
 });
