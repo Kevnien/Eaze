@@ -213,4 +213,20 @@ router.put('/question/:id', (req, res) => {
         .catch(err => res.status(500).json({"error":err.message}));
 });
 
+// DELETES a question by its id number
+router.delete('/question/:id', (req, res) => {
+    const {id} = req.params;
+    db('questions_table')
+        .where({id: id})
+        .del()
+        .then(count => {
+            if(count === 1){
+                res.status(200).json({"success":"deleted question","id":id});
+            }else{
+                res.status(400).json({"user_error":"could not find question with that id","id":id});
+            }
+        })
+        .catch(err => res.status(500).json({"server_error":err.message}));
+});
+
 module.exports = router;
