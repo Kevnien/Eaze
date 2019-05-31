@@ -13,11 +13,27 @@ All bodies should be in JSON
 
 # /api/
 * all endpoints begin with /api/
-* GET / - gets all the surveys in the db without the timestamp
+* GET / - confirms endpoint works
 # /create/
-* GET / - responds with status 200 and json object to confirm create endpoint is working
+* GET / - gets all the surveys in the db
 * POST / - body:{"title":"title of survey"} ; inserts a new survey into the db ; returns success message with id of survey
-* POST /:id = id:id of survey to add question to ; body:{"question":"survey question"} ; inserts question for a survey into the db ; returns success message with id of question
+* GET /:id - returns the id, title, created_at, and updated_at values of the survey with that id; also returns all questions for that survey
+* PUT /:id - body:{"title":"new title"}; returns id, new_title, updated_at, and old_title
+* DELETE /:id - deletes survey and returns how many questions were deleted with that survey
+* POST /:id - id of survey to add question to ; body:{"question":"survey question"} ; inserts question for a survey into the db ; returns success message with id of question
+* GET /question/:id - returns id, survey_id, question, and created_at of the question with that id
+* PUT /question/:id - body:{"question":"updated question"}; returns id, new_question, and old_question
+* DELETE /question/:id - deletes question with that id; returns id of deleted question
+# /answer/
+* GET / - returns sessions created
+* POST /:id - creates a session for the survey with that id, session would hold a set of answers; return id of newly created session
+* GET /:id - returns id, survey_id, created_at, and updated_at for the session with that id; also returns answers for that session
+* PUT /:id - updates the session so that it has a new updated_at value
+* DELETE /:id - deletes session with that id and accompanying answers; returns id and amt_questions_deleted
+* POST /:survey_id/:session_id/:question_id - body:{"answer":"answer to survey question"}; returns survey_id, session_id, question_id, and id
+* GET /:survey_id/:session_id/:question_id - returns object with id, session_id, question_id, answer, and created_at
+* PUT /:survey_id/:session_id/:question_id - body:{"answer":"updated answer"}; returns survey_id, session_id, question_id, changes; changes is an object that holds the new answer
+* DELETE /:survey_id/:session_id/:question_id - deletes the answer and updates updated_at field for session entry
 
 # Take-home exercise for backend interviews at Eaze
 

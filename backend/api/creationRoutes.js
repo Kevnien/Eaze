@@ -39,7 +39,12 @@ router.get('/:id', (req, res) => {
         .where('id', '=', id)
         .then(object => {
             if(object.length !== 0){
-                res.status(200).json(object[0]);
+                db('questions_table')
+                    .where({survey_id: id})
+                    .then(questions => {
+                        res.status(200).json({object, questions});
+                    })
+                    .catch(err => res.status(500).json(err.message));
             }else{
                 res.status(400).json({"error":`no survey with id ${id} exists`});
             }
